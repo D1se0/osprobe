@@ -144,9 +144,21 @@ async def _run_demo(args: argparse.Namespace, ui: UI) -> int:
         port = site._server.sockets[0].getsockname()[1]
         target_url = f"http://127.0.0.1:{port}/images"
         ui.print_info(f"Servidor simulado levantado: {etiqueta} en :{port}")
-        args2 = argparse.Namespace(**{**vars(args), "export": None})
-        verdict = await _scan_one(target_url, args2, seed="images", ui=ui)
+        verdict = await _scan_one(target_url, args, seed="images", ui=ui)
         resultados.append((etiqueta, verdict.decision.value, verdict.confidence))
+        # Export con nombre distintivo por mock, para no pisar informes.
+        if args.export:
+            os.makedirs(args.export_dir, exist_ok=True)
+            base = os.path.join(args.export_dir, f"osprobe-informe-{os_type}-mock")
+            if args.export in ("json", "both"):
+                with open(f"{base}.json", "w", encoding="utf-8") as fh:
+                    fh.write(to_json(verdict))
+                ui.print_info(f"Informe escrito en {base}.json")
+            if args.export in ("md", "txt", "both"):
+                ext = "md" if args.export in ("md", "both") else "txt"
+                with open(f"{base}.{ext}", "w", encoding="utf-8") as fh:
+                    fh.write(to_markdown(verdict))
+                ui.print_info(f"Informe escrito en {base}.{ext}")
         await runner.cleanup()
 
     # Resumen comparativo del sandbox

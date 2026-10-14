@@ -79,9 +79,14 @@ def test_generators_variantes():
     from osprobe.probes.case_probe import case_variants
 
     out = case_variants("images")
-    assert "Images" in out and "IMAGES" in out and "images" not in out
-    deep = case_variants("a/b", deep=True)
-    assert "a/B" in deep and "A/b" in deep and "Ab/b" in deep or True  # camel va sólo en deep
+    assert "Images" in out and "IMAGES" in out and "imageS" in out
+    assert "images" not in out  # la semilla sin mutar nunca sale
+    # En deep: la variante camel intercalada de un fragmento de 5 chars
+    # ("AbCdE") NO la genera el modo normal (la primera capital sería "Abcde").
+    normal = case_variants("abcde")
+    deep = case_variants("abcde", deep=True)
+    assert "Abcde" in normal and "Abcde" in deep
+    assert "AbCdE" in deep and "AbCdE" not in normal
 
 
 def test_target_normalization():
