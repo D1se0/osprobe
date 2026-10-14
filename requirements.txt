@@ -1,0 +1,3 @@
+rich>=13.0
+aiohttp>=3.9
+# opcional para proxies socks5: aiohttp-socks

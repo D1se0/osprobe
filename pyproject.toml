@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "osprobe"
+version = "1.0.0"
+description = "Fingerprint del sistema operativo remoto mediante técnicas HTTP (case-sensitivity de rutas) — UI animada con Rich."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "D1se0" }]
+keywords = ["osint", "recon", "fingerprint", "os-detection", "security", "pentest", "iis", "linux"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+]
+dependencies = [
+    "rich>=13.0",
+    "aiohttp>=3.9",
+]
+
+[project.optional-dependencies]
+socks = ["aiohttp-socks"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+osprobe = "osprobe.cli:main"
+
+[tool.setuptools]
+packages = ["osprobe", "osprobe.probes"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
